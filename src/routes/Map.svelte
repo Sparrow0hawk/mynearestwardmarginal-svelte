@@ -1,43 +1,65 @@
 <script lang="ts">
-	import { onMount, onDestroy, setContext } from 'svelte';
-	import { Map, NavigationControl, ScaleControl } from 'maplibre-gl';
+	import { Popup, Map, NavigationControl, ScaleControl } from 'maplibre-gl';
+	import geojsonExtent from '@mapbox/geojson-extent';
 	import { browser } from '$app/environment';
 	import 'maplibre-gl/dist/maplibre-gl.css';
+	import wardGeoJson from '/src/data/sheffield-wards.geojson?url';
 
-	let mapContainer: HTMLElement;
-	let map: Map;
-	let loaded = false;
+	async function loadWards() {
+		let map: Map;
+		let source = 'wards';
+		let layer = 'ward-layer';
+		const resp = await fetch(wardGeoJson);
+		const body = await resp.text();
+		const json = JSON.parse(body);
 
-	let setCamera = !window.location.hash;
-
-	setContext('map', { getMap: () => map, setCamera: setCamera });
-
-	onMount(() => {
 		map = new Map({
-			container: mapContainer,
-			style: 'https://demotiles.maplibre.org/style.json',
-			center: [-3.15, 54.3],
-			zoom: 5
+			container: 'map',
+			style: 'https://demotiles.maplibre.org/style.json'
 		});
+
+		let hoverId: any = null;
+		function unhover() {
+			if (hoverId !== null) {
+				map.setFeatureState({ source: source, id: hoverId }, { hover: false });
+			}
+		}
 
 		map.addControl(new ScaleControl());
 		map.addControl(new NavigationControl(), 'bottom-left');
 
-		map.on('load', () => {
-			loaded = true;
+		map.on('load', function () {
+			map.fitBounds(geojsonExtent(json), {
+				padding: 20,
+				animate: false
+			});
+			map.addSource(source, {
+				type: 'geojson',
+				data: json,
+				generateId: true
+			});
+			map.addLayer({
+				id: layer,
+				source: source,
+				type: 'fill',
+				paint: {
+					'fill-color': 'rgb(200, 100, 240)',
+					'fill-outline-color': 'rgb(200, 100, 240)',
+					'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.8, 0.4]
+				}
+			});
+			map.on('click', 'ward-layer', function (e) {
+				new Popup().setLngLat(e.lngLat).setHTML(e.features[0].properties.admin_name).addTo(map);
+			});
 		});
-	});
-	onDestroy(() => console.log('Wrap up'));
+	}
+	loadWards();
 </script>
 
-<div class="map" bind:this={mapContainer}>
-	{#if loaded}
-		<slot />
-	{/if}
-</div>
+<div id="map" />
 
 <style>
-	.map {
+	#map {
 		position: relative;
 		flex-grow: 1;
 		min-height: 85vh;

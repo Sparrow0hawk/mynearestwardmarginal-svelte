@@ -10,8 +10,12 @@
 	<title>Template maplibre-gl</title>
 </svelte:head>
 <Layout>
-	<div slot="sidebar">
+	<div slot="title">
 		<h1>A template svelte maplibre-gl site</h1>
+	</div>
+
+	<div slot="sidebar">
+		<h2>Another subtitle</h2>
 	</div>
 
 	<div slot="map">

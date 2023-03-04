@@ -1,2 +1,20 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+	import { Styles } from 'sveltestrap';
+	import Map from './Map.svelte';
+	import Layout from './Layout.svelte';
+</script>
+
+<Styles />
+
+<svelte:head>
+	<title>Template maplibre-gl</title>
+</svelte:head>
+<Layout>
+	<div slot="sidebar">
+		<h1>A template svelte maplibre-gl site</h1>
+	</div>
+
+	<div slot="map">
+		<Map />
+	</div>
+</Layout>

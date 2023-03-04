@@ -2,6 +2,7 @@
 	import { Styles } from 'sveltestrap';
 	import Map from './Map.svelte';
 	import Layout from './Layout.svelte';
+	import MainForm from './MainForm.svelte';
 </script>
 
 <Styles />
@@ -16,6 +17,7 @@
 
 	<div slot="sidebar">
 		<h2>Another subtitle</h2>
+		<MainForm />
 	</div>
 
 	<div slot="map">

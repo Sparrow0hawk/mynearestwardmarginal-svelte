@@ -40,6 +40,6 @@
 	.map {
 		position: relative;
 		flex-grow: 1;
-		min-height: 100vh;
+		min-height: 85vh;
 	}
 </style>

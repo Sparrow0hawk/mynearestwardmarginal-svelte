@@ -7,11 +7,11 @@
 <Styles />
 
 <svelte:head>
-	<title>Template maplibre-gl</title>
+	<title>mynearestsheffieldmarginal</title>
 </svelte:head>
 <Layout>
 	<div slot="title">
-		<h1>A template svelte maplibre-gl site</h1>
+		<h1>mynearestsheffieldmarginal</h1>
 	</div>
 
 	<div slot="sidebar">

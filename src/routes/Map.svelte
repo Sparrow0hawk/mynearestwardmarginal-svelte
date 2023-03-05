@@ -6,19 +6,18 @@
 	import wardGeoJson from '/src/data/sheffield-wards.geojson?url';
 
 	async function loadWards() {
-		let map: Map;
 		let source = 'wards';
 		let layer = 'ward-layer';
 		const resp = await fetch(wardGeoJson);
 		const body = await resp.text();
 		const json = JSON.parse(body);
 
-		map = new Map({
+		let map = new Map({
 			container: 'map',
 			style: 'https://demotiles.maplibre.org/style.json'
 		});
 
-		let hoverId: any = null;
+		let hoverId = null;
 		function unhover() {
 			if (hoverId !== null) {
 				map.setFeatureState({ source: source, id: hoverId }, { hover: false });

@@ -1,9 +1,14 @@
 <script lang="ts">
-	import { Popup, Map, NavigationControl, ScaleControl } from 'maplibre-gl';
+	import { Popup, Map, NavigationControl, ScaleControl, Marker } from 'maplibre-gl';
 	import geojsonExtent from '@mapbox/geojson-extent';
 	import { browser } from '$app/environment';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import wardGeoJson from '/src/data/sheffield-wards.geojson?url';
+
+	export let lon;
+	export let lat;
+	let map;
+	let marker;
 
 	async function loadWards() {
 		let source = 'wards';
@@ -12,7 +17,7 @@
 		const body = await resp.text();
 		const json = JSON.parse(body);
 
-		let map = new Map({
+		map = new Map({
 			container: 'map',
 			style: 'https://demotiles.maplibre.org/style.json'
 		});
@@ -23,6 +28,8 @@
 				map.setFeatureState({ source: source, id: hoverId }, { hover: false });
 			}
 		}
+
+		marker = new Marker().setLngLat([lon, lat]).addTo(map);
 
 		map.addControl(new ScaleControl());
 		map.addControl(new NavigationControl(), 'bottom-left');
@@ -53,6 +60,9 @@
 		});
 	}
 	loadWards();
+	$: if (marker) {
+		marker.setLngLat([lon, lat]);
+	}
 </script>
 
 <div id="map" />

@@ -1,5 +1,8 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { Form, FormGroup, Button, Input, Label } from 'sveltestrap';
+
+	const dispatch = createEventDispatcher();
 
 	var input_postcode: any;
 
@@ -49,7 +52,8 @@
 	function run_geocode(postcode) {
 		geocode_postcode(postcode)
 			.then((res) => {
-				console.log(res.features[1].center);
+				const { lon, lat } = res.features[1].center;
+				dispatch('postcode', { lon, lat });
 			})
 			.catch((err) => {
 				console.log(err);
@@ -65,7 +69,7 @@
 <Form>
 	<FormGroup>
 		<Label>Enter Postcode</Label>
-		<Input type="text" placeholder="Postcode" bind:value={input_postcode} />
+		<Input type="text" placeholder="Postcode" id="postcode" bind:value={input_postcode} />
 	</FormGroup>
 	<Button outline type="submit" on:click={run_geocode(input_postcode)}>Submit</Button>
 	<Button outline type="submit">Refresh</Button>

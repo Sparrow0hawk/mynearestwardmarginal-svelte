@@ -29,8 +29,6 @@
 			}
 		}
 
-		marker = new Marker().setLngLat([lon, lat]).addTo(map);
-
 		map.addControl(new ScaleControl());
 		map.addControl(new NavigationControl(), 'bottom-left');
 
@@ -60,8 +58,14 @@
 		});
 	}
 	loadWards();
-	$: if (marker) {
-		marker.setLngLat([lon, lat]);
+
+	function addMarker(lon, lat, map) {
+		marker = new Marker().setLngLat([lon, lat]).addTo(map);
+		console.log('Marker placed');
+	}
+
+	$: if (!isNaN(lon) && !isNaN(lat)) {
+		addMarker(lon, lat, map);
 	}
 </script>
 

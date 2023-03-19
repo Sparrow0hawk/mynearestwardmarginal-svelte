@@ -52,7 +52,7 @@
 	function run_geocode(postcode) {
 		geocode_postcode(postcode)
 			.then((res) => {
-				const { lon, lat } = res.features[1].center;
+				const [lon, lat] = res.features[1].center;
 				dispatch('postcode', { lon, lat });
 			})
 			.catch((err) => {
